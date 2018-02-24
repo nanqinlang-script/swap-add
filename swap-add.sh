@@ -1,35 +1,19 @@
 # author: nanqinlang
 ## based on swap.sh
 
+supported_distros="redhat centos ubuntu debian"
+
 check_system(){
-	while true
+	for dist in ${supported_distros}
 	do
-		if cat /proc/version | grep redhat >/dev/null 2>&1
-		then
-			os_release=redhat
-			echo "$os_release"
-			break
-		fi
-		if cat /proc/version | grep centos >/dev/null 2>&1
-		then
-			os_release=centos
-			echo "$os_release"
-			break
-		fi
-		if cat /proc/version | grep ubuntu >/dev/null 2>&1
-		then
-			os_release=ubuntu
-			echo "$os_release"
-			break
-		fi
-		if cat /proc/version | grep -i debian >/dev/null 2>&1
-		then
-			os_release=debian
-			echo "$os_release"
-			break
-		fi
-		break
+		grep -o $dist /proc/version && os_release=$dist && break
 	done
+
+	if [[ -z "${os_release}" ]]
+	then
+		echo "Unsupported distribution."
+		exit 1
+	fi
 }
 
 check_root(){
